@@ -1,0 +1,11 @@
+snippet b
+  ---
+  date: `strftime("%Y-%m-%d %T")`
+  layout: post
+  slug: `tolower(substitute(g:post_title, " ", "-", "g"))`
+  title: `g:post_title`
+  categories:
+  - ${1}
+  ---
+  
+  ${2}
