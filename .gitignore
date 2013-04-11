@@ -1,0 +1,4 @@
+.vim/bundle
+*.log
+.tmuxinator/*.yml
+*.weechatlog
