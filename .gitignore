@@ -1,4 +1,5 @@
 .vim/bundle
 *.log
-.tmuxinator/*.yml
+tmuxinator/*.yml
 *.weechatlog
+irc.conf
