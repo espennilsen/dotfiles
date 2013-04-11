@@ -3,3 +3,4 @@
 tmuxinator/*.yml
 *.weechatlog
 irc.conf
+vim/bundle/*
