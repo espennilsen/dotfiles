@@ -1,9 +1,8 @@
 =begin
   * Name: Rakefile
   * Description: This will set up your dotfiles
-  * Author: @Ryanb
-  * Date: Jun 02, 2012
-  * License: https://github.com/ryanb/dotfiles/blob/master/LICENSE
+  * Author: @Espennilsen (Original author: @Ryanb)
+  * Date: Apr 12 2013
   * Forked from: https://github.com/ryanb/dotfiles/blob/master/Rakefile
 =end
 
@@ -43,6 +42,8 @@ task :install do
       link_file(file)
     end
   end
+  init_submodules
+  install_vim_bundles
 end
 
 def replace_file(file)
@@ -97,4 +98,30 @@ def install_oh_my_zsh
       puts "skipping oh-my-zsh, you will need to change ~/.zshrc"
     end
   end
+end
+
+def init_submodules
+    print "Initiate git submodules? [ynq] "
+    case $stdin.gets.chomp
+    when 'y'
+      puts "Initiating git submodules"
+      system %Q{git submodule init && git submodule update}
+    when 'q'
+      exit
+    else
+      puts "Skipping git submodules (Not recommended!)"
+    end
+end
+
+def install_vim_bundles
+    print "Install vim bundles from vimrc? [ynq] "
+    case $stdin.gets.chomp
+    when 'y'
+      puts "Installing vim bundles"
+      system %Q{vim -c :BundleInstall -c :q}
+    when 'q'
+      exit
+    else
+      puts "Skipping vim bundles"
+    end
 end
