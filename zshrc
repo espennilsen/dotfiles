@@ -34,4 +34,5 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=~/.bin:~/.rvm/gems/ruby-1.9.3-p194/bin:/home/espen/.rvm/gems/ruby-1.9.3-p194@global/bin:~/.rvm/rubies/ruby-1.9.3-p194/bin:~/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+export PATH=~/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
