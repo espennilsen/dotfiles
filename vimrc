@@ -11,12 +11,12 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'vim-scripts/Command-T'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'tangledhelix/vim-octopress'
-Bundle 'garbas/vim-snipmate'
 "Required by vim-snipmate
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim' 
-Bundle 'honza/snipmate-snippets'
+Bundle "honza/vim-snippets"
 " End of vim-snipmate requirements
+Bundle 'garbas/vim-snipmate'
 Bundle 'desert.vim'
 
 filetype plugin indent on     " required for Vundle!
