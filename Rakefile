@@ -44,6 +44,7 @@ task :install do
   end
   init_submodules
   install_vim_bundles
+  puts "Install completed!"
 end
 
 def replace_file(file)
