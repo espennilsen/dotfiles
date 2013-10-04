@@ -7,7 +7,7 @@ Espen Nilsens personal dot files!
 Initial setup:
 ==============
 
-		git clone git://github.com/espennilsen/mydots.git ~/.dotfiles
+		git clone git://github.com/espennilsen/dotfiles.git ~/.dotfiles
 		cd ~/.dotfiles
 		Rake install
 
