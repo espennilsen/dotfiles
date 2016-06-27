@@ -27,6 +27,7 @@ set laststatus=2   " Always show the statusline
 set encoding=utf-8 " Necessary to show unicode glyphs
 set nowrap " don't wrap lines
 set number " Show line numbers
+set relativenumber " Show relative line numbers
 set tabstop=4 " A tab is 4 spaces
 set shiftwidth=4 " 4 spaces when you autoindent
 set shiftround " use multiple shiftwidth when indenting with '<'
