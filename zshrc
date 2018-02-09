@@ -37,5 +37,6 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:/home/espen/.local/bin:$PATH"
+export DOCKER_HOST=localhost:2375
 eval "$(rbenv init -)"
