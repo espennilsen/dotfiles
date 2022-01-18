@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -e
+
+
+# Install Node.js
+# See https://github.com/nodesource/distributions/blob/master/README.md
+#
+curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/nodesource.gpg
+sudo tee /etc/apt/sources.list.d/nodesource.list &>/dev/null <<EOF
+deb https://deb.nodesource.com/node_17.x {{ .chezmoi.osRelease.versionCodename }} main
+deb-src https://deb.nodesource.com/node_17.x {{ .chezmoi.osRelease.versionCodename }} main
+EOF
+
+
+sudo apt-get update
+sudo apt-get install --yes \
+  git-lfs \
+  tmux \
+  nodejs \
+  jq \
+  unzip \
+  rng-tools \
+  zip
