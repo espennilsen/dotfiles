@@ -9,5 +9,5 @@ Requirements
 Install and set up 1Password [CLI](https://app-updates.agilebits.com/product_history/CLI)
 Sign in to 1Password
 ```console
-$ eval $(op signin my)
+$ eval $(op signin <subdomain> <email>)
 ```
