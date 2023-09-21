@@ -12,6 +12,8 @@ sudo pacman -S --noconfirm \
   tmux \
   unzip \
   zip \
+  neovim \
+  less
 {{- end }}
 
 {{- if eq .chezmoi.osRelease.id "ubuntu" }}
@@ -23,5 +25,6 @@ sudo apt-get install --yes \
   jq \
   unzip \
   rng-tools \
-  zip
+  zip \
+  neovim
 {{- end }}
