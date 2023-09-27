@@ -1,0 +1,2 @@
+exec "setxkbmap -layout no"
+set $mod Mod1 
