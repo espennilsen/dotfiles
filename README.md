@@ -25,7 +25,7 @@ The install script will:
 
 ## Prerequisites
 
-- **[1Password CLI](https://developer.1password.com/docs/cli/get-started/)** (`op`) — required on all platforms for SSH keys and code-server config. On headless systems the CLI alone is sufficient; on desktop machines install [1Password](https://1password.com/) as well.
+- **[1Password CLI](https://developer.1password.com/docs/cli/get-started/)** (`op`) — required on all platforms for SSH keys and code-server config. [1Password desktop app](https://1password.com/) is recommended but not required.
 
 ## Day-to-day management
 
