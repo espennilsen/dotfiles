@@ -48,6 +48,7 @@ install_prerequisites() {
       # Install essentials that chezmoi/dotfiles depend on
       info "Installing prerequisites via brew..."
       brew install git curl
+      brew install --cask 1password 1password-cli
       ok "Prerequisites installed"
       ;;
     Linux)
@@ -91,7 +92,7 @@ install_chezmoi() {
 check_op() {
   if ! command -v op &> /dev/null; then
     warn "1Password CLI (op) is not installed."
-    warn "Some secret templates (SSH keys, GPG, code-server) will fail without it."
+    warn "Some secret templates (SSH keys, code-server) will fail without it."
     warn "Install from: https://developer.1password.com/docs/cli/get-started/"
     echo ""
     read -rp "Continue without 1Password CLI? [y/N] " reply
@@ -102,7 +103,15 @@ check_op() {
   else
     ok "1Password CLI ready"
     if ! op account list &> /dev/null; then
-      warn "Not signed in to 1Password. Run: eval \$(op signin)"
+      warn "Not signed in to 1Password."
+      info "Open 1Password.app and sign in, then enable CLI integration:"
+      info "  Settings → Developer → Connect with 1Password CLI"
+      echo ""
+      read -rp "Continue without signing in? (secret templates will fail) [y/N] " reply
+      if [[ ! "$reply" =~ ^[Yy]$ ]]; then
+        error "Aborting. Sign in to 1Password first."
+        exit 1
+      fi
     fi
   fi
 }
