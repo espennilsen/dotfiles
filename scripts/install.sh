@@ -116,14 +116,14 @@ install_op() {
     if [[ -n "$shorthand" ]]; then
       op account add --shorthand "$shorthand"
       eval "$(op signin --account "$shorthand")"
-      echo ""
-      info "Tip: To always sign in to the same account, set the OP_ACCOUNT"
-      info "environment variable to your account shorthand, sign-in address, or ID."
-      info "See: https://developer.1password.com/docs/cli/sign-in-manually"
     else
-      warn "No shorthand provided. Skipping account setup."
-      warn "Run 'op account add --shorthand <name>' manually."
+      op account add
+      eval "$(op signin)"
     fi
+    echo ""
+    info "Tip: To always sign in to the same account, set the OP_ACCOUNT"
+    info "environment variable to your account shorthand, sign-in address, or ID."
+    info "See: https://developer.1password.com/docs/cli/sign-in-manually"
   fi
 }
 
