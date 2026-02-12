@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+# Symlink dotfiles CLI to PATH
+mkdir -p "$HOME/.local/bin"
+ln -sf "$(chezmoi source-path)/scripts/dotfiles" "$HOME/.local/bin/dotfiles"
 
 # Install mise (version manager for node, pnpm, bun, etc.)
 if ! command -v mise &> /dev/null; then
