@@ -115,6 +115,7 @@ install_op() {
     read -rp "Account shorthand (e.g. personal, work): " shorthand
     if [[ -n "$shorthand" ]]; then
       op account add --shorthand "$shorthand"
+      eval "$(op signin --account "$shorthand")"
     else
       warn "No shorthand provided. Skipping account setup."
       warn "Run 'op account add --shorthand <name>' manually."
