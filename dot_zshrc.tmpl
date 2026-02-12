@@ -18,27 +18,43 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
 fi
 
 # Powerlevel10k (installed via brew)
-if [[ -f $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
-  source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+if [[ -f /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+  source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
-# Completions
+# Completions (cached, refreshed every 24h)
 autoload -Uz compinit
-compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # History
 HISTSIZE=50000
 SAVEHIST=50000
 HISTFILE=~/.zsh_history
 setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
+
+# Editor
+export EDITOR="nvim"
 
 # Key bindings
 bindkey -e
 
-# Useful aliases (git)
+# Useful aliases
+alias ll="ls -la"
+alias ..="cd .."
+alias ...="cd ../.."
+
+# Git aliases
 alias g="git"
 alias gs="git status"
 alias ga="git add"
@@ -93,7 +109,17 @@ if [[ -d "$HOME/Library/Android/sdk" ]]; then
   export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
 fi
 
-neofetch
+# zsh-autosuggestions
+if [[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# zsh-syntax-highlighting (must be sourced last)
+if [[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+fastfetch
 
 {{- else }}
 

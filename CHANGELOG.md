@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-02-12
+
+### Added
+
+- Add zsh-autosuggestions for fish-like inline suggestions
+- Add zsh-syntax-highlighting for command colorization
+- Add shell aliases: `ll`, `..`, `...`
+- Add `EDITOR=nvim` export
+- Add history options: `APPEND_HISTORY`, `INC_APPEND_HISTORY`, `HIST_FIND_NO_DUPS`, `HIST_EXPIRE_DUPS_FIRST`
+
+### Changed
+
+- Replace neofetch with fastfetch (actively maintained, faster)
+- Cache compinit with 24h refresh for faster shell startup
+- Hardcode `/opt/homebrew` paths instead of `$(brew --prefix)` calls for faster shell startup
+
 ## [0.2.0] - 2026-02-12
 
 ### Added
@@ -80,6 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Oh-my-zsh with Powerlevel10k and zsh-nvm as external dependencies
 - Wallpaper
 
-[Unreleased]: https://github.com/espennilsen/dotfiles/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/espennilsen/dotfiles/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/espennilsen/dotfiles/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/espennilsen/dotfiles/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/espennilsen/dotfiles/releases/tag/v0.1.0
