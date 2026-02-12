@@ -109,8 +109,8 @@ install_op() {
   info "Recommended: Turn on 1Password desktop app integration."
   info "See: https://developer.1password.com/docs/cli/get-started/#step-2-turn-on-the-1password-desktop-app-integration"
   echo ""
-  read -rp "Have you enabled desktop app integration? [Y/n] " reply
-  if [[ "$reply" =~ ^[Nn]$ ]]; then
+  read -rp "Have you enabled desktop app integration? [y/N] " reply
+  if [[ ! "$reply" =~ ^[Yy]$ ]]; then
     info "Setting up 1Password CLI account instead."
     read -rp "Account shorthand (e.g. personal, work): " shorthand
     if [[ -n "$shorthand" ]]; then
