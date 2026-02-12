@@ -1,0 +1,222 @@
+#!/usr/bin/env bash
+#
+# dotfiles — Day-to-day management wrapper for chezmoi.
+#
+# Install to PATH:
+#   ln -sf "$(chezmoi source-path)/scripts/dotfiles" ~/.local/bin/dotfiles
+#
+set -euo pipefail
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+info()  { echo -e "${BLUE}[info]${NC}  $*"; }
+ok()    { echo -e "${GREEN}[ok]${NC}    $*"; }
+warn()  { echo -e "${YELLOW}[warn]${NC}  $*"; }
+error() { echo -e "${RED}[error]${NC} $*" >&2; }
+
+CHEZMOI_SOURCE="$(chezmoi source-path 2>/dev/null || echo "$HOME/.local/share/chezmoi")"
+
+# -------------------------------------------------------------------
+# Commands
+# -------------------------------------------------------------------
+
+cmd_status() {
+  info "Managed files with pending changes:"
+  chezmoi diff --no-pager || echo "(no changes)"
+}
+
+cmd_apply() {
+  info "Applying dotfiles..."
+  chezmoi apply -v "$@"
+  ok "Applied."
+}
+
+cmd_update() {
+  info "Pulling latest from remote and applying..."
+  chezmoi update -v "$@"
+  ok "Updated."
+}
+
+cmd_diff() {
+  chezmoi diff "$@"
+}
+
+cmd_edit() {
+  if [[ $# -gt 0 ]]; then
+    chezmoi edit "$@"
+  else
+    info "Opening chezmoi source directory: $CHEZMOI_SOURCE"
+    cd "$CHEZMOI_SOURCE"
+    if [[ -n "${EDITOR:-}" ]]; then
+      $EDITOR .
+    else
+      echo "$CHEZMOI_SOURCE"
+    fi
+  fi
+}
+
+cmd_add() {
+  if [[ $# -eq 0 ]]; then
+    error "Usage: dotfiles add <file> [file...]"
+    error "Example: dotfiles add ~/.config/starship.toml"
+    exit 1
+  fi
+  chezmoi add "$@"
+  ok "Added: $*"
+}
+
+cmd_forget() {
+  if [[ $# -eq 0 ]]; then
+    error "Usage: dotfiles forget <file> [file...]"
+    exit 1
+  fi
+  chezmoi forget "$@"
+  ok "Forgotten: $*"
+}
+
+cmd_managed() {
+  chezmoi managed "$@"
+}
+
+cmd_unmanaged() {
+  chezmoi unmanaged "$@"
+}
+
+cmd_cd() {
+  info "$CHEZMOI_SOURCE"
+  echo "Run: cd $CHEZMOI_SOURCE"
+}
+
+cmd_git() {
+  git -C "$CHEZMOI_SOURCE" "$@"
+}
+
+cmd_doctor() {
+  echo -e "${BOLD}=== chezmoi doctor ===${NC}"
+  chezmoi doctor || true
+
+  echo ""
+  echo -e "${BOLD}=== Tool versions ===${NC}"
+  echo -n "chezmoi: "; chezmoi --version 2>/dev/null || echo "not found"
+  echo -n "git:     "; git --version 2>/dev/null || echo "not found"
+  echo -n "op:      "; op --version 2>/dev/null || echo "not installed"
+  echo -n "mise:    "; mise --version 2>/dev/null || echo "not installed"
+
+  echo ""
+  echo -e "${BOLD}=== 1Password ===${NC}"
+  if command -v op &> /dev/null; then
+    op account list 2>/dev/null || warn "Not signed in"
+  else
+    warn "1Password CLI not installed"
+  fi
+
+  echo ""
+  echo -e "${BOLD}=== Remote ===${NC}"
+  git -C "$CHEZMOI_SOURCE" remote -v 2>/dev/null || warn "No git remote"
+}
+
+cmd_push() {
+  info "Committing and pushing dotfiles..."
+  cd "$CHEZMOI_SOURCE"
+  git add -A
+  local msg="${1:-update dotfiles}"
+  git commit -m "$msg" || info "Nothing to commit"
+  git push
+  ok "Pushed."
+}
+
+cmd_pull() {
+  info "Pulling latest dotfiles (without applying)..."
+  git -C "$CHEZMOI_SOURCE" pull
+  ok "Pulled. Run 'dotfiles apply' to apply changes."
+}
+
+cmd_verify() {
+  info "Dry run — showing what would change:"
+  chezmoi apply --dry-run --verbose "$@"
+}
+
+cmd_help() {
+  cat <<EOF
+${BOLD}dotfiles${NC} — manage your chezmoi dotfiles
+
+${BOLD}Usage:${NC}
+  dotfiles <command> [args...]
+
+${BOLD}Common:${NC}
+  status          Show pending changes (diff)
+  apply [args]    Apply dotfiles to home directory
+  update          Pull from remote and apply
+  verify          Dry run — preview what would change
+  diff [file]     Show diff for a specific file or all
+
+${BOLD}Editing:${NC}
+  edit [file]     Edit a managed file (or open source dir)
+  add <file>      Start managing a new file
+  forget <file>   Stop managing a file
+  managed         List all managed files
+  unmanaged       List files in home not managed by chezmoi
+
+${BOLD}Git:${NC}
+  push [msg]      Commit all changes and push to remote
+  pull            Pull latest from remote (no apply)
+  git <cmd>       Run git commands in the source directory
+  cd              Print the source directory path
+
+${BOLD}Diagnostics:${NC}
+  doctor          Check health of chezmoi setup
+  help            Show this help
+
+${BOLD}Examples:${NC}
+  dotfiles status                    # see what changed
+  dotfiles add ~/.config/foo.toml    # start managing a file
+  dotfiles edit ~/.zshrc             # edit the template
+  dotfiles verify                    # preview before applying
+  dotfiles push "add starship"       # commit & push
+EOF
+}
+
+# -------------------------------------------------------------------
+# Main
+# -------------------------------------------------------------------
+main() {
+  if ! command -v chezmoi &> /dev/null; then
+    error "chezmoi is not installed. Run scripts/install.sh first."
+    exit 1
+  fi
+
+  local cmd="${1:-help}"
+  shift 2>/dev/null || true
+
+  case "$cmd" in
+    status)    cmd_status "$@" ;;
+    apply)     cmd_apply "$@" ;;
+    update)    cmd_update "$@" ;;
+    diff)      cmd_diff "$@" ;;
+    edit)      cmd_edit "$@" ;;
+    add)       cmd_add "$@" ;;
+    forget)    cmd_forget "$@" ;;
+    managed)   cmd_managed "$@" ;;
+    unmanaged) cmd_unmanaged "$@" ;;
+    cd)        cmd_cd "$@" ;;
+    git)       cmd_git "$@" ;;
+    doctor)    cmd_doctor "$@" ;;
+    push)      cmd_push "$@" ;;
+    pull)      cmd_pull "$@" ;;
+    verify)    cmd_verify "$@" ;;
+    help|--help|-h) cmd_help ;;
+    *)
+      error "Unknown command: $cmd"
+      cmd_help
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

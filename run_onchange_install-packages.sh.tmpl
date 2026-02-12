@@ -2,11 +2,20 @@
 set -e
 
 
-# Install NVM and pnpm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
+# Install mise (version manager for node, pnpm, bun, etc.)
+if ! command -v mise &> /dev/null; then
+  curl https://mise.run | sh
+fi
 
-{{- if eq .chezmoi.osRelease.id "arch" }}
+# Install default tools with mise
+mise use -g node@lts
+mise use -g pnpm@latest
+mise use -g bun@latest
+mise use -g go@latest
+mise use -g python@latest
+mise use -g rust@latest
+
+{{- if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch") }}
 
 sudo pacman -S --noconfirm \
   git-lfs \
@@ -17,15 +26,84 @@ sudo pacman -S --noconfirm \
   less
 {{- end }}
 
-{{- if eq .chezmoi.osRelease.id "ubuntu" }}
+{{- if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "ubuntu") }}
 sudo apt-get update
 sudo apt-get install --yes \
   git-lfs \
   tmux \
-  nodejs \
   jq \
   unzip \
   rng-tools \
   zip \
   neovim
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+
+# Install Homebrew if not present
+if ! command -v brew &> /dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+brew bundle --file=/dev/stdin <<EOF
+# CLI tools
+brew "git-lfs"
+brew "tmux"
+brew "jq"
+brew "neovim"
+brew "fd"
+brew "gh"
+brew "ripgrep"
+brew "mise"
+brew "powerlevel10k"
+brew "fzf"
+brew "htop"
+brew "wget"
+brew "yazi"
+brew "zoxide"
+brew "neofetch"
+brew "gum"
+brew "nmap"
+brew "iperf"
+brew "cmake"
+brew "websocat"
+brew "watchman"
+brew "pipx"
+brew "cloudflared"
+brew "gemini-cli"
+# Dev tools
+cask "powershell"
+cask "ghostty"
+cask "1password"
+cask "1password-cli"
+cask "cursor"
+cask "docker-desktop"
+cask "visual-studio-code@insiders"
+cask "claude"
+cask "lm-studio"
+cask "raycast"
+cask "postman"
+cask "obs"
+cask "devtoys"
+cask "figma"
+
+# Productivity
+cask "obsidian"
+cask "notion"
+
+# Communication
+cask "discord"
+cask "telegram"
+cask "whatsapp"
+cask "spotify"
+
+# Utilities
+cask "vlc"
+cask "the-unarchiver"
+cask "bartender"
+cask "balenaetcher"
+cask "grandperspective"
+cask "zerotier-one"
+cask "rustdesk"
+EOF
 {{- end }}

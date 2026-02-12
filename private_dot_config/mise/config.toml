@@ -1,0 +1,20 @@
+# Global mise configuration
+# Per-project settings go in each project's mise.toml
+
+[tools]
+node = "lts"
+pnpm = "latest"
+bun = "latest"
+go = "latest"
+python = "latest"
+rust = "latest"
+
+[settings]
+# Automatically trust mise.toml files in known directories
+trusted_config_paths = ["~/Dev"]
+
+# Use .nvmrc / .node-version files for compatibility
+idiomatic_version_file = true
+
+# Check for outdated tools weekly
+status.show_tools = true

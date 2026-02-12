@@ -1,0 +1,3 @@
+- Add comprehensive TSDoc comments to all public functions, classes, and modules to improve code documentation and developer experience.
+- never push to origin without confirming with user
+- when committing, always use: git -c user.signingkey=~/.ssh/id_agent_signing -c gpg.ssh.program=ssh-keygen commit
