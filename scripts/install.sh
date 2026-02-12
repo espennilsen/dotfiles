@@ -116,6 +116,9 @@ install_op() {
     if [[ -n "$shorthand" ]]; then
       op account add --shorthand "$shorthand"
       eval "$(op signin --account "$shorthand")"
+      echo ""
+      info "Tip: To always sign in to the same account, set the OP_ACCOUNT"
+      info "environment variable to your account shorthand, sign-in address, or ID."
     else
       warn "No shorthand provided. Skipping account setup."
       warn "Run 'op account add --shorthand <name>' manually."
