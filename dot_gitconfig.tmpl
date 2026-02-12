@@ -1,6 +1,30 @@
 [user]
-  name = { .git.name }
-  email = { .git.email }
+  name = {{ .git.name }}
+  email = {{ .git.email }}
 
 [init]
   defaultBranch = main
+
+[core]
+  excludesfile = ~/.gitignore_global
+
+[alias]
+  agent-commit = !git -c user.signingkey=~/.ssh/id_agent_signing -c gpg.ssh.program=ssh-keygen commit
+
+{{- if eq .chezmoi.os "darwin" }}
+
+[user]
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOPruYznTmfjy6Y85gzxW8n5vjwCdwKcXY0cAVIAiiKm
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = true
+
+[coderabbit]
+  machineId = cli/07a3a25d45bb406c8f23f3c0e555da2a
+{{- end }}

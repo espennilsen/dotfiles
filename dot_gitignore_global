@@ -1,0 +1,63 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+
+# Editors
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Environment / secrets
+.env*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.p12
+*.keystore
+
+# mise
+.mise.local.toml
+
+# Node
+node_modules/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Rust
+target/
+
+# Databases (local dev)
+*.sqlite
+*.db
+
+# Docker
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Logs
+*.log
+
+# Coding agents — local settings and state
+.claude/settings.local.json
+.pi/memory/
+.pi/settings.json
+.cursor/
+.codex/
+.aider*
+.continue/
+.codeium/
