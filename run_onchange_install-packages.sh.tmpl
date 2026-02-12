@@ -28,9 +28,21 @@ sudo pacman -S --noconfirm \
   zip \
   neovim \
   less
+
+# 1Password CLI (available in Chaotic AUR)
+if ! command -v op &> /dev/null; then
+  sudo pacman -S --noconfirm 1password-cli || echo "Install 1Password CLI manually: https://developer.1password.com/docs/cli/get-started/"
+fi
 {{- end }}
 
 {{- if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "ubuntu") }}
+
+# Add 1Password CLI repo
+if ! test -f /etc/apt/sources.list.d/1password.list; then
+  sudo mkdir -p /etc/apt/keyrings
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor -o /etc/apt/keyrings/1password-archive-keyring.gpg
+  echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main" | sudo tee /etc/apt/sources.list.d/1password.list
+fi
 
 # Add Charm repo for gum
 if ! test -f /etc/apt/sources.list.d/charm.list; then
@@ -41,6 +53,7 @@ fi
 
 sudo apt-get update
 sudo apt-get install --yes \
+  1password-cli \
   git-lfs \
   gum \
   tmux \
