@@ -104,8 +104,7 @@ check_op() {
     ok "1Password CLI ready"
     if ! op account list &> /dev/null; then
       warn "Not signed in to 1Password."
-      info "Open 1Password.app and sign in, then enable CLI integration:"
-      info "  Settings → Developer → Connect with 1Password CLI"
+      warn "See: https://developer.1password.com/docs/cli/get-started/"
       echo ""
       read -rp "Continue without signing in? (secret templates will fail) [y/N] " reply
       if [[ ! "$reply" =~ ^[Yy]$ ]]; then
