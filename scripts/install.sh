@@ -105,6 +105,11 @@ install_op() {
       ;;
   esac
   ok "1Password CLI installed ($(op --version))"
+  echo ""
+  info "Recommended: Turn on 1Password desktop app integration."
+  info "See: https://developer.1password.com/docs/cli/get-started/#step-2-turn-on-the-1password-desktop-app-integration"
+  echo ""
+  read -rp "Press Enter to continue..."
 }
 
 # -------------------------------------------------------------------
