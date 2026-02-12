@@ -7,18 +7,52 @@
 #
 set -euo pipefail
 
-# Require gum
-if ! command -v gum &> /dev/null; then
-  echo "Error: gum is not installed. Run: brew install gum" >&2
-  exit 1
-fi
+HAS_GUM=false
+command -v gum &> /dev/null && HAS_GUM=true
 
-info()  { gum log --level info "$*"; }
-ok()    { gum log --level info --prefix "✓" "$*"; }
-warn()  { gum log --level warn "$*"; }
-error() { gum log --level error "$*" >&2; }
+# -------------------------------------------------------------------
+# Output helpers (gum with plain fallback)
+# -------------------------------------------------------------------
 
-header() { gum style --bold --foreground 212 "$*"; }
+info() {
+  if $HAS_GUM; then
+    gum log --level info "$*"
+  else
+    echo "[info]  $*"
+  fi
+}
+
+ok() {
+  if $HAS_GUM; then
+    gum log --level info --prefix "✓" "$*"
+  else
+    echo "[✓]     $*"
+  fi
+}
+
+warn() {
+  if $HAS_GUM; then
+    gum log --level warn "$*"
+  else
+    echo "[warn]  $*" >&2
+  fi
+}
+
+error() {
+  if $HAS_GUM; then
+    gum log --level error "$*" >&2
+  else
+    echo "[error] $*" >&2
+  fi
+}
+
+header() {
+  if $HAS_GUM; then
+    gum style --bold --foreground 212 "$*"
+  else
+    echo "==> $*"
+  fi
+}
 
 CHEZMOI_SOURCE="$(chezmoi source-path 2>/dev/null || echo "$HOME/.local/share/chezmoi")"
 
@@ -143,60 +177,100 @@ cmd_verify() {
 }
 
 cmd_help() {
-  gum style \
-    --border rounded \
-    --border-foreground 212 \
-    --padding "1 2" \
-    --margin "0 0" \
-    "$(gum style --bold --foreground 212 'dotfiles') — manage your chezmoi dotfiles"
+  if $HAS_GUM; then
+    gum style \
+      --border rounded \
+      --border-foreground 212 \
+      --padding "1 2" \
+      --margin "0 0" \
+      "$(gum style --bold --foreground 212 'dotfiles') — manage your chezmoi dotfiles"
 
-  echo ""
-  gum format -- \
-    "## Usage" \
-    '```' \
-    'dotfiles <command> [args...]' \
-    '```' \
-    "" \
-    "## Common" \
-    "| Command | Description |" \
-    "| --- | --- |" \
-    "| **status** | Show pending changes (diff) |" \
-    "| **apply** [args] | Apply dotfiles to home directory |" \
-    "| **update** | Pull from remote and apply |" \
-    "| **verify** | Dry run — preview what would change |" \
-    "| **diff** [file] | Show diff for a specific file or all |" \
-    "" \
-    "## Editing" \
-    "| Command | Description |" \
-    "| --- | --- |" \
-    "| **edit** [file] | Edit a managed file (or open source dir) |" \
-    "| **add** \<file\> | Start managing a new file |" \
-    "| **forget** \<file\> | Stop managing a file |" \
-    "| **managed** | List all managed files |" \
-    "| **unmanaged** | List files in home not managed by chezmoi |" \
-    "" \
-    "## Git" \
-    "| Command | Description |" \
-    "| --- | --- |" \
-    "| **push** [msg] | Commit all changes and push to remote |" \
-    "| **pull** | Pull latest from remote (no apply) |" \
-    "| **git** \<cmd\> | Run git commands in the source directory |" \
-    "| **cd** | Print the source directory path |" \
-    "" \
-    "## Diagnostics" \
-    "| Command | Description |" \
-    "| --- | --- |" \
-    "| **doctor** | Check health of chezmoi setup |" \
-    "| **help** | Show this help |" \
-    "" \
-    "## Examples" \
-    '```' \
-    'dotfiles status                    # see what changed' \
-    'dotfiles add ~/.config/foo.toml    # start managing a file' \
-    'dotfiles edit ~/.zshrc             # edit the template' \
-    'dotfiles verify                    # preview before applying' \
-    'dotfiles push "add starship"       # commit & push' \
-    '```'
+    echo ""
+    gum format -- \
+      "## Usage" \
+      '```' \
+      'dotfiles <command> [args...]' \
+      '```' \
+      "" \
+      "## Common" \
+      "| Command | Description |" \
+      "| --- | --- |" \
+      "| **status** | Show pending changes (diff) |" \
+      "| **apply** [args] | Apply dotfiles to home directory |" \
+      "| **update** | Pull from remote and apply |" \
+      "| **verify** | Dry run — preview what would change |" \
+      "| **diff** [file] | Show diff for a specific file or all |" \
+      "" \
+      "## Editing" \
+      "| Command | Description |" \
+      "| --- | --- |" \
+      "| **edit** [file] | Edit a managed file (or open source dir) |" \
+      "| **add** \<file\> | Start managing a new file |" \
+      "| **forget** \<file\> | Stop managing a file |" \
+      "| **managed** | List all managed files |" \
+      "| **unmanaged** | List files in home not managed by chezmoi |" \
+      "" \
+      "## Git" \
+      "| Command | Description |" \
+      "| --- | --- |" \
+      "| **push** [msg] | Commit all changes and push to remote |" \
+      "| **pull** | Pull latest from remote (no apply) |" \
+      "| **git** \<cmd\> | Run git commands in the source directory |" \
+      "| **cd** | Print the source directory path |" \
+      "" \
+      "## Diagnostics" \
+      "| Command | Description |" \
+      "| --- | --- |" \
+      "| **doctor** | Check health of chezmoi setup |" \
+      "| **help** | Show this help |" \
+      "" \
+      "## Examples" \
+      '```' \
+      'dotfiles status                    # see what changed' \
+      'dotfiles add ~/.config/foo.toml    # start managing a file' \
+      'dotfiles edit ~/.zshrc             # edit the template' \
+      'dotfiles verify                    # preview before applying' \
+      'dotfiles push "add starship"       # commit & push' \
+      '```'
+  else
+    cat <<'EOF'
+dotfiles — manage your chezmoi dotfiles
+
+Usage:
+  dotfiles <command> [args...]
+
+Common:
+  status          Show pending changes (diff)
+  apply [args]    Apply dotfiles to home directory
+  update          Pull from remote and apply
+  verify          Dry run — preview what would change
+  diff [file]     Show diff for a specific file or all
+
+Editing:
+  edit [file]     Edit a managed file (or open source dir)
+  add <file>      Start managing a new file
+  forget <file>   Stop managing a file
+  managed         List all managed files
+  unmanaged       List files in home not managed by chezmoi
+
+Git:
+  push [msg]      Commit all changes and push to remote
+  pull            Pull latest from remote (no apply)
+  git <cmd>       Run git commands in the source directory
+  cd              Print the source directory path
+
+Diagnostics:
+  doctor          Check health of chezmoi setup
+  help            Show this help
+
+Examples:
+  dotfiles status                    # see what changed
+  dotfiles add ~/.config/foo.toml    # start managing a file
+  dotfiles edit ~/.zshrc             # edit the template
+  dotfiles verify                    # preview before applying
+  dotfiles push "add starship"       # commit & push
+EOF
+  fi
 }
 
 # -------------------------------------------------------------------
