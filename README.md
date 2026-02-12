@@ -18,25 +18,21 @@ cd dotfiles
 
 The install script will:
 1. Install system prerequisites (Homebrew on macOS, packages on Linux)
-2. Install chezmoi
-3. Check for 1Password CLI and GPG key
-4. Preview changes and apply (with confirmation)
+2. Install 1Password and 1Password CLI (macOS)
+3. Install chezmoi
+4. Check for 1Password CLI sign-in
+5. Preview changes and apply (with confirmation)
 
 ## Prerequisites
 
 - **1Password CLI** (`op`) — needed for SSH keys and code-server config
-  - Install: https://developer.1password.com/docs/cli/get-started/
-  - Sign in: `eval $(op signin)`
+  - See: https://developer.1password.com/docs/cli/get-started/
 
 ## Day-to-day management
 
-After install, symlink the `dotfiles` command to your PATH:
+The `dotfiles` CLI is automatically symlinked to `~/.local/bin/dotfiles` on install.
 
-```sh
-ln -sf "$(chezmoi source-path)/scripts/dotfiles" ~/.local/bin/dotfiles
-```
-
-Then use:
+Usage:
 
 ```sh
 dotfiles status          # see what would change
@@ -89,9 +85,13 @@ Linux only:
 
 On macOS, the shell is kept lightweight for fast startup:
 - **Powerlevel10k** sourced directly via Homebrew
-- **Completions** via zsh built-in `compinit`
+- **zsh-autosuggestions** and **zsh-syntax-highlighting** via Homebrew
+- **Completions** via zsh built-in `compinit` (cached, refreshed every 24h)
 - **Git aliases** defined inline
 - **gh / tea** completions loaded if available
+- **fzf** key bindings (Ctrl+R fuzzy history, Ctrl+T file finder)
+- **zoxide** smart directory jumping (`z`)
+- **fastfetch** on shell startup
 - **mise** activated for tool version management
 
 ### Linux (oh-my-zsh)
