@@ -22,6 +22,7 @@ mise use -g rust@latest
 
 sudo pacman -S --noconfirm \
   git-lfs \
+  gum \
   tmux \
   unzip \
   zip \
@@ -30,9 +31,18 @@ sudo pacman -S --noconfirm \
 {{- end }}
 
 {{- if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "ubuntu") }}
+
+# Add Charm repo for gum
+if ! test -f /etc/apt/sources.list.d/charm.list; then
+  sudo mkdir -p /etc/apt/keyrings
+  curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+fi
+
 sudo apt-get update
 sudo apt-get install --yes \
   git-lfs \
+  gum \
   tmux \
   jq \
   unzip \
