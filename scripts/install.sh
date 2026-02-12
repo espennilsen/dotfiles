@@ -48,7 +48,6 @@ install_prerequisites() {
       # Install essentials that chezmoi/dotfiles depend on
       info "Installing prerequisites via brew..."
       brew install git curl
-      brew install --cask 1password 1password-cli
       ok "Prerequisites installed"
       ;;
     Linux)
@@ -72,6 +71,43 @@ install_prerequisites() {
 }
 
 # -------------------------------------------------------------------
+# 2b. Install 1Password CLI
+# -------------------------------------------------------------------
+install_op() {
+  if command -v op &> /dev/null; then
+    ok "1Password CLI already installed ($(op --version))"
+    return
+  fi
+
+  info "Installing 1Password CLI..."
+  case "$OS" in
+    Darwin)
+      brew install --cask 1password-cli
+      ;;
+    Linux)
+      if command -v pacman &> /dev/null; then
+        sudo pacman -S --noconfirm 1password-cli 2>/dev/null || {
+          warn "1password-cli not found in repos (enable Chaotic AUR?)"
+          warn "See: https://developer.1password.com/docs/cli/get-started/"
+          return
+        }
+      elif command -v apt-get &> /dev/null; then
+        sudo mkdir -p /etc/apt/keyrings
+        curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor -o /etc/apt/keyrings/1password-archive-keyring.gpg
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main" | sudo tee /etc/apt/sources.list.d/1password.list
+        sudo apt-get update
+        sudo apt-get install --yes 1password-cli
+      else
+        warn "Could not install 1Password CLI automatically."
+        warn "See: https://developer.1password.com/docs/cli/get-started/"
+        return
+      fi
+      ;;
+  esac
+  ok "1Password CLI installed ($(op --version))"
+}
+
+# -------------------------------------------------------------------
 # 3. Install chezmoi
 # -------------------------------------------------------------------
 install_chezmoi() {
@@ -92,26 +128,25 @@ install_chezmoi() {
 check_op() {
   if ! command -v op &> /dev/null; then
     warn "1Password CLI (op) is not installed."
-    warn "Some secret templates (SSH keys, code-server) will fail without it."
-    warn "Install from: https://developer.1password.com/docs/cli/get-started/"
+    warn "Secret templates (SSH keys, code-server) will fail without it."
+    warn "See: https://developer.1password.com/docs/cli/get-started/"
     echo ""
     read -rp "Continue without 1Password CLI? [y/N] " reply
     if [[ ! "$reply" =~ ^[Yy]$ ]]; then
       error "Aborting. Install 1Password CLI first."
       exit 1
     fi
-  else
-    ok "1Password CLI ready"
-    if ! op account list &> /dev/null; then
-      warn "Not signed in to 1Password."
-      warn "See: https://developer.1password.com/docs/cli/get-started/"
-      echo ""
-      read -rp "Continue without signing in? (secret templates will fail) [y/N] " reply
-      if [[ ! "$reply" =~ ^[Yy]$ ]]; then
-        error "Aborting. Sign in to 1Password first."
-        exit 1
-      fi
+  elif ! op account list &> /dev/null; then
+    warn "Not signed in to 1Password."
+    warn "See: https://developer.1password.com/docs/cli/get-started/"
+    echo ""
+    read -rp "Continue without signing in? (secret templates will fail) [y/N] " reply
+    if [[ ! "$reply" =~ ^[Yy]$ ]]; then
+      error "Aborting. Sign in to 1Password first."
+      exit 1
     fi
+  else
+    ok "1Password CLI signed in"
   fi
 }
 
@@ -158,6 +193,7 @@ main() {
   echo ""
 
   install_prerequisites
+  install_op
   install_chezmoi
   check_op
   apply_dotfiles
