@@ -1,6 +1,7 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -53,6 +54,7 @@ bindkey -e
 alias ll="ls -la"
 alias ..="cd .."
 alias ...="cd ../.."
+alias vim="nvim"
 
 # Git aliases
 alias g="git"
@@ -86,6 +88,27 @@ fi
 # fzf key bindings and completion
 if command -v fzf &> /dev/null; then
   source <(fzf --zsh)
+fi
+
+# sesh — smart tmux session manager (Alt-s to pick session)
+if command -v sesh &> /dev/null; then
+  eval "$(sesh completion zsh)"
+
+  function sesh-sessions() {
+    {
+      exec </dev/tty
+      exec <&1
+      local session
+      session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
+      zle reset-prompt > /dev/null 2>&1 || true
+      [[ -z "$session" ]] && return
+      sesh connect $session
+    }
+  }
+  zle     -N             sesh-sessions
+  bindkey -M emacs '\es' sesh-sessions
+  bindkey -M vicmd '\es' sesh-sessions
+  bindkey -M viins '\es' sesh-sessions
 fi
 
 # console-ninja

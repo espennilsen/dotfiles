@@ -66,6 +66,7 @@ dotfiles help                     # show all commands
 | `~/.config/i3/` | `private_dot_config/i3/` | i3 window manager (Linux) |
 | `~/.config/sway/` | `private_dot_config/sway/` | Sway compositor (Linux) |
 | `~/.config/waybar/` | `private_dot_config/waybar/` | Waybar status bar (Linux) |
+| `~/.config/sesh/` | `private_dot_config/sesh/` | Sesh session manager config |
 | `~/.config/code-server/` | `private_dot_config/code-server/` | code-server (via 1Password) |
 
 ### Run-on-change scripts
@@ -91,6 +92,7 @@ On macOS, the shell is kept lightweight for fast startup:
 - **gh / tea** completions loaded if available
 - **fzf** key bindings (Ctrl+R fuzzy history, Ctrl+T file finder)
 - **zoxide** smart directory jumping (`z`)
+- **sesh** smart tmux session manager (Alt+S to pick session from shell)
 - **fastfetch** on shell startup
 - **mise** activated for tool version management
 
@@ -110,6 +112,43 @@ mise is installed automatically and activated in `.zshrc`.
 Global tool versions are set in `~/.config/mise/config.toml`.
 Per-project versions are configured with `mise.toml` files.
 
+### tmux + sesh
+
+[Sesh](https://github.com/joshmedeski/sesh) is a smart terminal session manager that integrates tmux, zoxide, and fzf for fast project switching.
+
+| Keybind | Where | Action |
+|---------|-------|--------|
+| `Ctrl-a T` | tmux | Open sesh picker popup (fzf) |
+| `Ctrl-a L` | tmux | Switch to last session (via sesh) |
+| `Alt-s` | zsh | Open sesh picker inline (fzf) |
+
+Inside the tmux picker (`Ctrl-a T`):
+- `Ctrl-a` — show all sources
+- `Ctrl-t` — filter tmux sessions only
+- `Ctrl-g` — filter configured sessions only
+- `Ctrl-x` — filter zoxide directories only
+- `Ctrl-f` — find directories under `~`
+- `Ctrl-d` — kill the highlighted tmux session
+
+Config: `~/.config/sesh/sesh.toml` — add pinned sessions, startup commands, and preview settings.
+
+**Raycast extensions** (install via Raycast Store → `⌘+Space` → "Store"):
+
+| Extension | Description |
+|---|---|
+| [sesh](https://www.raycast.com/joshmedeski/sesh) | Switch tmux sessions outside the terminal (requires tmux running) |
+| [GitHub](https://www.raycast.com/raycast/github) | Search PRs, issues, repos, review notifications |
+| [Docker](https://www.raycast.com/priithaamer/docker) | Manage containers and images |
+| [1Password](https://www.raycast.com/khasbilegt/1password) | Quick search and autofill secrets |
+| [Visual Studio Code](https://www.raycast.com/thomas/visual-studio-code) | Open recent projects in VS Code / Cursor |
+| [Obsidian](https://www.raycast.com/marcjulian/obsidian) | Search notes, create new ones, open vaults |
+| [Spotify](https://www.raycast.com/mattisssa/spotify-player) | Play/pause, search, queue tracks |
+| [Telegram](https://www.raycast.com/mommysgoodpuppy/telegram) | Search chats and send messages |
+| [Claude](https://www.raycast.com/quarkself/claude) | Quick access to Claude conversations |
+| [Kill Process](https://www.raycast.com/rolandleth/kill-process) | Fast process killer for stuck dev servers |
+| [IP Geolocation](https://www.raycast.com/koinzhang/ip-geolocation) | Quick IP lookup |
+| [Brew](https://www.raycast.com/nhojb/brew) | Search, install, update Homebrew packages |
+
 ### macOS packages (via Homebrew)
 
-`git-lfs`, `tmux`, `jq`, `neovim`, `1password-cli`, `fd`, `gh`, `ripgrep`, `mise`, `powerlevel10k`, `ghostty`
+`git-lfs`, `tmux`, `jq`, `neovim`, `1password-cli`, `fd`, `gh`, `ripgrep`, `mise`, `powerlevel10k`, `sesh`, `ghostty`

@@ -1,0 +1,40 @@
+{
+  "lastChangelogVersion": "0.52.10",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-4-6",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:@juanibiapina/pi-powerbar"
+  ],
+  "telemetry": {
+    "mode": "off",
+    "level": "INFO"
+  },
+  "tdWebui": {
+    "crossProjectRoot": "~/Dev",
+    "crossProjectDepth": 1
+  },
+  "pi-calendar": {
+    "useKysely": true
+  },
+  "pi-jobs": {
+    "useKysely": true
+  },
+  "pi-projects": {
+    "useKysely": true
+  },
+  "pi-personal-crm": {
+    "useKysely": true
+  },
+  "pi-channels": {
+    "adapters": {
+      "telegram": {
+        "transcription": {
+          "enabled": true,
+          "provider": "apple",
+          "language": "en"
+        }
+      }
+    }
+  }
+}

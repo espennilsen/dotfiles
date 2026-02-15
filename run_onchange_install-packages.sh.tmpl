@@ -18,6 +18,14 @@ mise use -g go@latest
 mise use -g python@latest
 mise use -g rust@latest
 
+{{- if ne .chezmoi.os "darwin" }}
+
+# Install sesh via Go (Linux)
+if command -v go &> /dev/null; then
+  go install github.com/joshmedeski/sesh/v2@latest
+fi
+{{- end }}
+
 {{- if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch") }}
 
 sudo pacman -S --noconfirm \
@@ -91,6 +99,7 @@ brew "fastfetch"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "gum"
+brew "sesh"
 brew "nmap"
 brew "iperf"
 brew "cmake"
