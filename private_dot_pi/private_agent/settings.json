@@ -1,10 +1,11 @@
 {
-  "lastChangelogVersion": "0.52.10",
+  "lastChangelogVersion": "0.54.1",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-6",
   "defaultThinkingLevel": "high",
   "packages": [
-    "npm:@juanibiapina/pi-powerbar"
+    "npm:@juanibiapina/pi-powerbar",
+    "npm:pi-powerline-footer"
   ],
   "telemetry": {
     "mode": "off",
@@ -36,5 +37,33 @@
         }
       }
     }
-  }
+  },
+  "pi-github": {
+    "defaultOwner": "espennilsen"
+  },
+  "pi-workon": {
+    "devDir": "~/Dev",
+    "aliases": {
+      "pi": "pi",
+      "blog": "e9n.dev",
+      "e9n": "e9n.dev",
+      "bg": "battleground.no",
+      "battleground": "battleground.no",
+      "hovdan": "Hovdan Seil AS",
+      "sailmaker": "Hovdan Seil AS",
+      "salesgpt": "SalesGPT",
+      "localbooks": "LocalBooks",
+      "comfyui": "comfyui-cheatsheet",
+      "stoic": "stoic-tracker",
+      "crewmap": "CrewMap",
+      "mcpbridge": "MCP-Bridge",
+      "starheim": "Starheim",
+      "hjernedal": "hjernedal.no",
+      "vibebox": "VibeBox",
+      "sail": "Sail La Vie",
+      "aivena": "aivena-workspace",
+      "x10s": "x10s"
+    }
+  },
+  "hideThinkingBlock": false
 }

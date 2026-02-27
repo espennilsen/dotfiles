@@ -3,7 +3,8 @@
 shell-integration = zsh
 custom-shader-animation = true
 window-theme = dark
-background-opacity = 0.8
+background-opacity = 0.9
+unfocused-split-opacity = 0.85
 theme = Purple Rain
 background = #21084a
 foreground = #fffbf6
@@ -28,6 +29,9 @@ palette = 13=#ac7bf0
 palette = 14=#74fdf3
 palette = 15=#ffffff
 macos-option-as-alt = left
-quick-terminal-size = 100%
 keybind = shift+enter=text:\n
-keybind = global:alt+g=toggle_quick_terminal
+keybind = global:cmd+apostrophe=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-animation-duration = 0.2
+quick-terminal-autohide = true
+quick-terminal-size = 33%

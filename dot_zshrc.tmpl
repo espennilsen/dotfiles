@@ -1,11 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Common PATH
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -16,6 +8,11 @@ export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 # Homebrew
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Fastfetch
+if command -v fastfetch &> /dev/null; then
+  fastfetch
 fi
 
 # Powerlevel10k (installed via brew)
@@ -43,6 +40,10 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
+
+# API Keys (fetched from 1Password via chezmoi)
+#export OPENROUTER_API_KEY="{{ onepasswordRead "op://Personal/OPENROUTER_API_KEY/notesPlain" }}"
+export VAULT_ADDR="{{ onepasswordRead "op://Personal/VAULT_ADDR/notesPlain" }}"
 
 # Editor
 export EDITOR="nvim"
@@ -109,6 +110,9 @@ if command -v sesh &> /dev/null; then
   bindkey -M emacs '\es' sesh-sessions
   bindkey -M vicmd '\es' sesh-sessions
   bindkey -M viins '\es' sesh-sessions
+
+  # Quick picker: s to connect to a session via gum
+  alias s='sesh connect "$(sesh list -i | gum filter --limit 1 --no-sort --fuzzy --placeholder '\''Pick a sesh'\'' --height 50 --prompt='\''⚡'\'')"'
 fi
 
 # console-ninja
@@ -142,7 +146,7 @@ if [[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-fastfetch
+
 
 {{- else }}
 
@@ -169,5 +173,5 @@ source $ZSH/oh-my-zsh.sh
 
 # Activate mise (version manager for node, pnpm, bun, etc.)
 if command -v mise &> /dev/null; then
-  eval "$(mise activate zsh)"
+  eval "$(mise activate zsh --quiet)"
 fi
