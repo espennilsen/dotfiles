@@ -1,9 +1,16 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) should go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Common PATH
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 {{- if eq .chezmoi.os "darwin" }}
 
-# --- macOS: lightweight shell setup (no oh-my-zsh) ---
+# --- macOS ---
 
 # Homebrew
 if [[ -f /opt/homebrew/bin/brew ]]; then
@@ -15,20 +22,18 @@ if command -v fastfetch &> /dev/null; then
   fastfetch
 fi
 
-# Powerlevel10k (installed via brew)
-if [[ -f /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
-  source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
-fi
+# Oh My Zsh + Powerlevel10k
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+DISABLE_AUTO_UPDATE="true"
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+source $ZSH/oh-my-zsh.sh
 
-# Completions (cached, refreshed every 24h)
-autoload -Uz compinit
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
-
-# History
+# History (override oh-my-zsh defaults)
 HISTSIZE=50000
 SAVEHIST=50000
 HISTFILE=~/.zsh_history
@@ -57,23 +62,13 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias vim="nvim"
 
-# Git aliases
-alias g="git"
-alias gs="git status"
-alias ga="git add"
-alias gc="git commit"
-alias gp="git push"
-alias gl="git log --oneline --graph --decorate"
-alias gd="git diff"
-alias gco="git checkout"
-
 # Locale
 export LANG=nb_NO.UTF-8
 export LC_ALL=nb_NO.UTF-8
 
 # tea completion
 if command -v tea &> /dev/null; then
-  source <(tea completion zsh)
+  eval "$(tea completion zsh)"
 fi
 
 # gh completion
@@ -136,21 +131,9 @@ if [[ -d "$HOME/Library/Android/sdk" ]]; then
   export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
 fi
 
-# zsh-autosuggestions
-if [[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-# zsh-syntax-highlighting (must be sourced last)
-if [[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-
-
-
 {{- else }}
 
-# --- Linux: oh-my-zsh setup ---
+# --- Linux ---
 
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"

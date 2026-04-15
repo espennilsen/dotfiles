@@ -31,24 +31,54 @@ The install script will:
 ## Day-to-day management
 
 The `dotfiles` CLI is automatically symlinked to `~/.local/bin/dotfiles` on install.
+It wraps chezmoi with a friendlier interface and uses [gum](https://github.com/charmbracelet/gum) for styled output when available (falls back to plain text).
 
-Usage:
+### Common
+
+| Command | Description |
+|---------|-------------|
+| `dotfiles status` | Show pending changes (diff) |
+| `dotfiles apply [args]` | Apply dotfiles to home directory |
+| `dotfiles update` | Pull from remote and apply |
+| `dotfiles verify` | Dry run — preview what would change |
+| `dotfiles diff [file]` | Show diff for a specific file or all |
+
+### Editing
+
+| Command | Description |
+|---------|-------------|
+| `dotfiles edit [file]` | Edit a managed file, or open the source directory in `$EDITOR` |
+| `dotfiles add <file>` | Start managing a new file |
+| `dotfiles forget <file>` | Stop managing a file |
+| `dotfiles managed` | List all managed files |
+| `dotfiles unmanaged` | List files in home not managed by chezmoi |
+
+### Git
+
+| Command | Description |
+|---------|-------------|
+| `dotfiles push [msg]` | Commit all changes and push to remote (default message: "update dotfiles") |
+| `dotfiles pull` | Pull latest from remote (no apply) |
+| `dotfiles git <cmd>` | Run arbitrary git commands in the source directory |
+| `dotfiles cd` | Print the chezmoi source directory path |
+
+### Diagnostics
+
+| Command | Description |
+|---------|-------------|
+| `dotfiles doctor` | Check health: chezmoi, tool versions, 1Password, git remote |
+| `dotfiles help` | Show all commands |
+
+### Examples
 
 ```sh
-dotfiles status          # see what would change
-dotfiles apply           # apply dotfiles
-dotfiles update          # pull latest from remote and apply
-dotfiles verify          # dry run — preview changes
-
-dotfiles add ~/.config/foo.toml   # start managing a new file
-dotfiles edit ~/.zshrc            # edit the chezmoi template
-dotfiles forget ~/.old-file       # stop managing a file
-
-dotfiles push "add starship"      # commit & push to remote
-dotfiles pull                     # pull without applying
-
-dotfiles doctor                   # check health of the setup
-dotfiles help                     # show all commands
+dotfiles status                    # see what changed
+dotfiles add ~/.config/foo.toml    # start managing a file
+dotfiles edit ~/.zshrc             # edit the template
+dotfiles verify                    # preview before applying
+dotfiles push "add starship"       # commit & push
+dotfiles git log --oneline -5      # recent commits
+dotfiles managed | grep ssh        # find managed ssh files
 ```
 
 ## What's included
