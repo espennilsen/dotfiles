@@ -5,10 +5,17 @@ if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
-# Symlink Homebrew-installed zsh plugins and themes into oh-my-zsh custom dirs
-mkdir -p "$HOME/.oh-my-zsh/custom/themes" "$HOME/.oh-my-zsh/custom/plugins"
-
+# Symlink Homebrew-installed powerlevel10k theme into oh-my-zsh custom themes
+mkdir -p "$HOME/.oh-my-zsh/custom/themes"
 ln -sf /opt/homebrew/share/powerlevel10k "$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
-ln -sf /opt/homebrew/share/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-ln -sf /opt/homebrew/share/zsh-syntax-highlighting "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+
+# Symlink Homebrew-installed zsh plugins into oh-my-zsh custom plugins
+# Homebrew doesn't ship .plugin.zsh files, so we create plugin dirs that source the Homebrew files
+mkdir -p "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+ln -sf /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+
+mkdir -p "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+ln -sf /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
 {{- end }}
