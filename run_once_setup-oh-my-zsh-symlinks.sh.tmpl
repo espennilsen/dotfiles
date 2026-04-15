@@ -1,5 +1,10 @@
 {{- if eq .chezmoi.os "darwin" }}
 #!/bin/bash
+# Install oh-my-zsh if missing
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
 # Symlink Homebrew-installed zsh plugins and themes into oh-my-zsh custom dirs
 mkdir -p "$HOME/.oh-my-zsh/custom/themes" "$HOME/.oh-my-zsh/custom/plugins"
 
