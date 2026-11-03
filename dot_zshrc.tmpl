@@ -5,7 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Common PATH
+# Common PATH (keep the first occurrence of each directory)
+typeset -U path PATH
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 {{- if eq .chezmoi.os "darwin" }}
@@ -39,7 +40,6 @@ SAVEHIST=50000
 HISTFILE=~/.zsh_history
 setopt SHARE_HISTORY
 setopt APPEND_HISTORY
-setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
@@ -47,7 +47,6 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
 # API Keys (fetched from 1Password via chezmoi)
-#export OPENROUTER_API_KEY="{{ onepasswordRead "op://Personal/OPENROUTER_API_KEY/notesPlain" }}"
 export VAULT_ADDR="{{ onepasswordRead "op://Personal/VAULT_ADDR/notesPlain" }}"
 
 # Editor
@@ -158,3 +157,28 @@ source $ZSH/oh-my-zsh.sh
 if command -v mise &> /dev/null; then
   eval "$(mise activate zsh --quiet)"
 fi
+
+# Maestro (mobile UI testing)
+[[ -d "$HOME/.maestro/bin" ]] && export PATH="$PATH:$HOME/.maestro/bin"
+
+# Added by bifrost installer
+export PATH="$HOME/.bifrost/bin:$PATH"
+
+[ -f ~/.free-coding-models.env ] && . ~/.free-coding-models.env  # free-coding-models-env
+[[ -r "$HOME/.ghcup/env" ]] && source "$HOME/.ghcup/env"
+
+# Prefer pnpm over npm
+npm() {
+  print -u2 'npm is disabled in interactive zsh; use pnpm instead.'
+  return 127
+}
+
+# pnpm
+export PNPM_HOME='/Users/espen/Library/pnpm'
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+
+# Added by Antigravity CLI installer
+export PATH="/Users/espen/.local/bin:$PATH"
