@@ -17,14 +17,20 @@
   signingkey = {{ onepasswordRead "op://Personal/GIT_SIGNING_KEY/password" }}
 
 [gpg]
-  format = ssh
+	format = ssh
 
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [commit]
-  gpgsign = true
+	gpgsign = no
 
 [coderabbit]
   machineId = {{ onepasswordRead "op://Personal/CODERABBIT_MACHINE_ID/password" }}
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
 {{- end }}

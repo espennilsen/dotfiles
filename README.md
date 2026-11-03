@@ -81,6 +81,22 @@ dotfiles git log --oneline -5      # recent commits
 dotfiles managed | grep ssh        # find managed ssh files
 ```
 
+## App-managed JSON settings
+
+Pi settings/models and Claude settings use `modify_` templates: repository defaults
+fill missing fields, while existing local values take precedence. This preserves
+Pi's updater configuration, provider credentials, and Orca-managed Claude hooks and
+status lines. A clean `chezmoi status` for these files means the merge is stable;
+it does not mean every local value is stored in Git.
+
+API keys are never copied into these templates. Existing Bifrost and Ollama
+1Password references seed credentials only when absent. On a new machine, provision
+the Hub and other providers' credentials separately. Orca installs its own hooks.
+To change an existing value, edit the live JSON as well as its repository default.
+
+Run `python3 scripts/test-preserved-json.py` to test preservation and idempotence
+with disposable fixtures (no live credentials or network calls).
+
 ## What's included
 
 | Target | Source | Notes |

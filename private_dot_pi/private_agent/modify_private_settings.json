@@ -1,0 +1,127 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Defaults only: preserve live settings and local Hub credentials. Provision credentials separately on a new machine. */ -}}
+{{- $current := fromJson (default "{}" .chezmoi.stdin) -}}
+{{- $defaults := fromJson `{
+  "lastChangelogVersion": "1.4.0",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6-astra",
+  "defaultThinkingLevel": "medium",
+  "packages": [
+    "npm:pi-powerline-footer",
+    "npm:pi-mcp-adapter",
+    "npm:pi-superpowers",
+    "npm:pi-subagents"
+  ],
+  "telemetry": {
+    "mode": "off",
+    "level": "INFO"
+  },
+  "tdWebui": {
+    "crossProjectRoot": "~/Dev",
+    "crossProjectDepth": 1
+  },
+  "pi-a2a": {
+    "owner": "espen",
+    "organization": "e9n",
+    "local": {
+      "bind": "192.168.0.14"
+    },
+    "hub": {
+      "url": "https://a2a-staging-api.e9n.dev/api",
+      "visibility": "private",
+      "autoRegister": false
+    }
+  },
+  "pi-calendar": {
+    "useKysely": true
+  },
+  "pi-jobs": {
+    "useKysely": true
+  },
+  "pi-projects": {
+    "useKysely": true
+  },
+  "pi-personal-crm": {
+    "useKysely": true
+  },
+  "pi-channels": {
+    "adapters": {
+      "telegram": {
+        "transcription": {
+          "enabled": true,
+          "provider": "apple",
+          "language": "en"
+        }
+      }
+    }
+  },
+  "pi-github": {
+    "defaultOwner": "espennilsen"
+  },
+  "pi-workon": {
+    "devDir": "~/Dev",
+    "aliases": {
+      "pi": "pi",
+      "blog": "e9n.dev",
+      "e9n": "e9n.dev",
+      "bg": "battleground.no",
+      "battleground": "battleground.no",
+      "hovdan": "Hovdan Seil AS",
+      "sailmaker": "Hovdan Seil AS",
+      "salesgpt": "SalesGPT",
+      "localbooks": "LocalBooks",
+      "comfyui": "comfyui-cheatsheet",
+      "stoic": "stoic-tracker",
+      "crewmap": "CrewMap",
+      "mcpbridge": "MCP-Bridge",
+      "starheim": "Starheim",
+      "hjernedal": "hjernedal.no",
+      "vibebox": "VibeBox",
+      "sail": "Sail La Vie",
+      "aivena": "aivena-workspace",
+      "x10s": "x10s"
+    }
+  },
+  "hideThinkingBlock": false,
+  "pi-authentik": {
+    "clientId": "WQLM8GPtO1PYVAB3iuDgKHDLVGPIZAwqtQ5Ksyig",
+    "scopes": [
+      "openid",
+      "profile",
+      "email",
+      "ak_proxy"
+    ],
+    "enableOfflineAccess": true,
+    "discoveryUrl": "https://id.e9n.dev/application/o/bifrost-auth/.well-known/openid-configuration",
+    "llmBaseUrl": "https://bifrost.e9n.dev/v1",
+    "exchangeClientId": "bmFrlcr7PeLd5L4RE9BZUhVdiSBaYIAuehRHmXVx"
+  },
+  "pi-secret": {
+    "policy": {
+      "extensions": {
+        "pi-authentik": {
+          "secrets": [
+            "session",
+            "clientSecret",
+            "exchangeClientId"
+          ],
+          "rawSecretAccess": [
+            "session",
+            "clientSecret",
+            "exchangeClientId"
+          ]
+        }
+      }
+    }
+  },
+  "theme": "dark",
+  "npmCommand": [
+    "/Users/espen/.local/share/mise/installs/node/lts/bin/corepack",
+    "pnpm@11.17.0"
+  ],
+  "extensions": [
+    "-builtin:mcp"
+  ]
+}` -}}
+{{- $result := mergeOverwrite $defaults $current -}}
+{{ $result | toPrettyJson }}

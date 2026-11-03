@@ -1,0 +1,174 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Preserve live provider credentials and model edits. Seed existing 1Password-backed credentials only when absent; provision other providers locally. */ -}}
+{{- $current := fromJson (default "{}" .chezmoi.stdin) -}}
+{{- $defaults := fromJson `{
+  "providers": {
+    "alibaba-plan-anthropic": {
+      "name": "Alibaba (Anthropic)",
+      "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/apps/anthropic",
+      "api": "anthropic-messages",
+      "authHeader": true,
+      "models": [
+        {
+          "id": "qwen3.6-plus",
+          "name": "Qwen 3.6 Plus",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 262144,
+          "maxTokens": 8192
+        },
+        {
+          "id": "deepseek-v3.2",
+          "name": "DeepSeek V3.2",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 131072,
+          "maxTokens": 8192
+        }
+      ]
+    },
+    "ollama-cloud": {
+      "api": "openai-completions",
+      "baseUrl": "https://ollama.com/v1",
+      "authHeader": true,
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": true
+      },
+      "models": [
+        {
+          "id": "deepseek-v4-flash:cloud",
+          "name": "DeepSeek V4 Flash (Cloud)",
+          "contextWindow": 1000000,
+          "input": [
+            "text"
+          ],
+          "reasoning": true
+        },
+        {
+          "id": "deepseek-v4-pro:cloud",
+          "name": "DeepSeek V4 Pro (Cloud)",
+          "contextWindow": 1000000,
+          "input": [
+            "text"
+          ],
+          "reasoning": true
+        },
+        {
+          "id": "gemma4:31b-cloud",
+          "name": "Gemma 4 31B (Cloud)",
+          "contextWindow": 256000,
+          "input": [
+            "text",
+            "image"
+          ],
+          "reasoning": true
+        },
+        {
+          "id": "glm-5.1:cloud",
+          "name": "GLM 5.1 (Cloud)",
+          "contextWindow": 198000,
+          "input": [
+            "text"
+          ],
+          "reasoning": true
+        },
+        {
+          "id": "qwen3.5:cloud",
+          "name": "Qwen 3.5 (Cloud)",
+          "contextWindow": 256000,
+          "input": [
+            "text",
+            "image"
+          ],
+          "reasoning": true
+        },
+        {
+          "id": "qwen3-coder-next:cloud",
+          "name": "Qwen 3 Coder Next (Cloud)",
+          "contextWindow": 256000,
+          "input": [
+            "text"
+          ],
+          "reasoning": true
+        },
+        {
+          "id": "kimi-k2.6",
+          "name": "Kimi K2.6 (Cloud)",
+          "contextWindow": 256000,
+          "input": [
+            "text",
+            "image"
+          ],
+          "reasoning": true
+        }
+      ]
+    },
+    "bifrost": {
+      "api": "openai-completions",
+      "baseUrl": "https://bf.e9n.dev/v1",
+      "authHeader": true,
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": true
+      }
+    },
+    "fcm": {
+      "name": "FCM",
+      "baseUrl": "http://localhost:19280/v1",
+      "api": "openai-completions",
+      "authHeader": false,
+      "models": [
+        {
+          "id": "fcm",
+          "name": "FCM",
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    "nvidia": {
+      "baseUrl": "https://integrate.api.nvidia.com/v1",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "openai/gpt-oss-120b",
+          "name": "GPT OSS 120B"
+        }
+      ]
+    }
+  }
+}` -}}
+{{- $result := mergeOverwrite $defaults $current -}}
+{{- if not (hasKey (index $result.providers "bifrost") "apiKey") -}}
+{{- $result = setValueAtPath "providers.bifrost.apiKey" (onepasswordRead "op://Personal/BIFROST_API_KEY_MACBOOK/notesPlain") $result -}}
+{{- end -}}
+{{- if not (hasKey (index $result.providers "ollama-cloud") "apiKey") -}}
+{{- $result = setValueAtPath "providers.ollama-cloud.apiKey" (onepasswordRead "op://Personal/OLLAMA_API_KEY/notesPlain") $result -}}
+{{- end -}}
+{{ $result | toPrettyJson }}
